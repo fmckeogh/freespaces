@@ -1,15 +1,15 @@
 use {
     crate::{
         log::create_trace_layer,
-        routes::{health, index, static_files},
+        routes::{fetch, health, index, static_files, submit},
     },
     axum::{routing::get, Router},
     color_eyre::eyre::Result,
+    serde::{Deserialize, Serialize},
     std::net::SocketAddr,
     tokio::task::JoinHandle,
     tower_http::compression::CompressionLayer,
     tracing::info,
-    tracing_appender::non_blocking::WorkerGuard,
 };
 
 pub mod config;
@@ -25,7 +25,7 @@ const STATIC_FILES_MAX_AGE: u64 = 15 * 60;
 /// Starts a new instance of the contractor returning a handle
 pub async fn start(config: &Config) -> Result<Handle> {
     // initialize global tracing subscriber
-    let _guard = crate::log::tracing_init(&config.log_path)?;
+    let _guard = crate::log::tracing_init()?;
 
     config::init(config.clone()).await;
 
@@ -33,6 +33,7 @@ pub async fn start(config: &Config) -> Result<Handle> {
 
     // create router with all routes and tracing layer
     let router = Router::new()
+        .route("/locations", get(fetch).post(submit))
         .route("/health", get(health))
         .route("/", get(index))
         .fallback(static_files)
@@ -51,11 +52,7 @@ pub async fn start(config: &Config) -> Result<Handle> {
     info!("contractor started on http://{}", address);
 
     // return handles
-    Ok(Handle {
-        address,
-        handle,
-        _guard,
-    })
+    Ok(Handle { address, handle })
 }
 
 /// Handle for running an instance
@@ -64,8 +61,6 @@ pub struct Handle {
     address: SocketAddr,
     // JoinHandle for server task
     handle: JoinHandle<Result<()>>,
-    // Guard for log file tracing
-    _guard: WorkerGuard,
 }
 
 impl Handle {
@@ -79,4 +74,18 @@ impl Handle {
         self.handle.await??;
         Ok(())
     }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct LocationOccupancy {
+    name: String,
+    occupancy: OccupancyLevel,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum OccupancyLevel {
+    Low,
+    Medium,
+    High,
 }

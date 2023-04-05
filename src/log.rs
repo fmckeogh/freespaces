@@ -2,7 +2,6 @@
 
 use {
     color_eyre::eyre::Result,
-    std::path::Path,
     tower_http::{
         classify::{ServerErrorsAsFailures, SharedClassifier},
         trace::{
@@ -10,39 +9,15 @@ use {
         },
     },
     tracing::Level,
-    tracing_appender::{
-        non_blocking::WorkerGuard,
-        rolling::{RollingFileAppender, Rotation},
-    },
-    tracing_subscriber::{
-        filter::{self, EnvFilter},
-        fmt,
-        prelude::*,
-    },
+    tracing_subscriber::{filter::EnvFilter, fmt, prelude::*},
 };
 
 /// Initialises the global tracing subscriber
-pub fn tracing_init<P: AsRef<Path>>(logfile_path: P) -> Result<WorkerGuard> {
-    let (non_blocking, guard) = tracing_appender::non_blocking(RollingFileAppender::new(
-        Rotation::DAILY,
-        logfile_path,
-        "log.txt",
-    ));
-
-    let mut layer = fmt::Layer::default();
-    layer.set_ansi(false);
-
-    let logfile = layer
-        .with_writer(non_blocking)
-        .with_filter(filter::LevelFilter::WARN);
-
-    tracing_subscriber::registry()
+pub fn tracing_init() -> Result<()> {
+    Ok(tracing_subscriber::registry()
         .with(fmt::layer())
         .with(EnvFilter::from_default_env())
-        .with(logfile)
-        .try_init()?;
-
-    Ok(guard)
+        .try_init()?)
 }
 
 /// Creates a TraceLayer for request, response and failure logging

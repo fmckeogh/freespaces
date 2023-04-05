@@ -17,7 +17,6 @@ serde = { version = "1.0.157", features = ["derive"] }
 tokio = { version = "1.26.0", features = ["full"] }
 tracing = { version = "0.1.37" }
 tracing-subscriber = { version = "0.3.16", features = ["env-filter"] }
-tracing-appender = "0.2.2"
 tower-http = { version = "0.4.0", features = ["trace", "compression-br", "compression-gzip", "compression-deflate"] }
 displaydoc = "0.2.3"
 thiserror = "1.0.40"
@@ -30,4 +29,4 @@ include_dir = "0.7.3"
 mime_guess = "2.0.4"
 chrono = "0.4.24"
 crc = "3.0.1"
-sqlx = { version = "0.7.0-alpha.2", features = [ "runtime-tokio", "tls-rustls" ] }
+sqlx = { version = "0.7.0-alpha.2", features = [ "runtime-tokio", "tls-rustls", "chrono"] }
