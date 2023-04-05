@@ -1,6 +1,6 @@
 use {
     crate::{
-        log::create_trace_layer,
+        log::{create_trace_layer, tracing_init},
         routes::{fetch, health, index, static_files, submit},
     },
     axum::{routing::get, Router},
@@ -26,13 +26,13 @@ const STATIC_FILES_MAX_AGE: u64 = 5 * 60;
 /// Starts a new instance of the contractor returning a handle
 pub async fn start(config: &Config) -> Result<Handle> {
     // initialize global tracing subscriber
-    let _guard = crate::log::tracing_init()?;
+    tracing_init()?;
 
     config::init(config.clone()).await;
 
-    let _pool = PgPoolOptions::new().connect(&config.database_url).await?;
+    let pool = PgPoolOptions::new().connect(&config.database_url).await?;
 
-    // sqlx::migrate!().run(&pool).await?;
+    sqlx::migrate!().run(&pool).await?;
 
     let compression = CompressionLayer::new().br(true).deflate(true).gzip(true);
 
@@ -42,6 +42,7 @@ pub async fn start(config: &Config) -> Result<Handle> {
         .route("/health", get(health))
         .route("/", get(index))
         .fallback(static_files)
+        .with_state(pool)
         .layer(compression)
         .layer(create_trace_layer());
 
@@ -87,8 +88,9 @@ pub struct LocationOccupancy {
     occupancy: OccupancyLevel,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, sqlx::Type)]
 #[serde(rename_all = "lowercase")]
+#[sqlx(type_name = "occupancy_level", rename_all = "lowercase")]
 pub enum OccupancyLevel {
     Low,
     Medium,
