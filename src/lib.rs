@@ -6,6 +6,7 @@ use {
     axum::{routing::get, Router},
     color_eyre::eyre::Result,
     serde::{Deserialize, Serialize},
+    sqlx::postgres::PgPoolOptions,
     std::net::SocketAddr,
     tokio::task::JoinHandle,
     tower_http::compression::CompressionLayer,
@@ -19,8 +20,8 @@ pub mod routes;
 
 pub use crate::config::Config;
 
-/// Static files cached for 15 minutes
-const STATIC_FILES_MAX_AGE: u64 = 15 * 60;
+/// Static files cached for 5 minutes
+const STATIC_FILES_MAX_AGE: u64 = 5 * 60;
 
 /// Starts a new instance of the contractor returning a handle
 pub async fn start(config: &Config) -> Result<Handle> {
@@ -28,6 +29,10 @@ pub async fn start(config: &Config) -> Result<Handle> {
     let _guard = crate::log::tracing_init()?;
 
     config::init(config.clone()).await;
+
+    let _pool = PgPoolOptions::new().connect(&config.database_url).await?;
+
+    // sqlx::migrate!().run(&pool).await?;
 
     let compression = CompressionLayer::new().br(true).deflate(true).gzip(true);
 
