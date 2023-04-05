@@ -10,7 +10,7 @@ use {
     include_dir::{include_dir, Dir},
 };
 
-static DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/frontend");
+static DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/frontend/out");
 
 /// Handler for static files
 pub async fn static_files(uri: Uri) -> Response {
