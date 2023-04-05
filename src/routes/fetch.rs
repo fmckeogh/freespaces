@@ -1,6 +1,11 @@
 use {
-    crate::{LocationOccupancy, OccupancyLevel},
-    axum::{extract::State, http::StatusCode, response::IntoResponse, Json},
+    crate::{LocationOccupancy, OccupancyLevel, FETCH_MAX_AGE},
+    axum::{
+        extract::State,
+        http::{header::CACHE_CONTROL, HeaderMap, HeaderValue, StatusCode},
+        response::IntoResponse,
+        Json,
+    },
     chrono::{DateTime, Utc},
     sqlx::{Pool, Postgres},
 };
@@ -34,5 +39,11 @@ pub async fn fetch(State(db): State<Pool<Postgres>>) -> impl IntoResponse {
         )
         .collect::<Vec<_>>();
 
-    (StatusCode::OK, Json(locations))
+    let mut headers = HeaderMap::new();
+    headers.insert(
+        CACHE_CONTROL,
+        HeaderValue::from_str(&format!("public, max-age={FETCH_MAX_AGE}, immutable")).unwrap(),
+    );
+
+    (StatusCode::OK, headers, Json(locations))
 }

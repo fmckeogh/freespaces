@@ -23,6 +23,9 @@ pub use crate::config::Config;
 /// Static files cached for 5 minutes
 const STATIC_FILES_MAX_AGE: u64 = 5 * 60;
 
+/// Location status cached for 10 seconds
+const FETCH_MAX_AGE: u64 = 10;
+
 /// Starts a new instance of the contractor returning a handle
 pub async fn start(config: &Config) -> Result<Handle> {
     // initialize global tracing subscriber
