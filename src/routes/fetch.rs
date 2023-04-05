@@ -1,5 +1,5 @@
 use {
-    crate::{LocationOccupancy, OccupancyLevel, FETCH_MAX_AGE},
+    crate::{error::Error, LocationOccupancy, OccupancyLevel, FETCH_MAX_AGE},
     axum::{
         extract::State,
         http::{header::CACHE_CONTROL, HeaderMap, HeaderValue, StatusCode},
@@ -18,26 +18,29 @@ struct DbOccupancy {
 }
 
 /// Fetch current occupancy status
-pub async fn fetch(State(db): State<Pool<Postgres>>) -> impl IntoResponse {
+pub async fn fetch(State(db): State<Pool<Postgres>>) -> Result<impl IntoResponse, Error> {
     let locations = sqlx::query_as!(
         DbOccupancy,
-        r#"SELECT location, MAX(timestamp) AS timestamp, occupancy as "occupancy: _" FROM occupancies GROUP BY location, occupancy"#
+        r#"
+            SELECT location, MAX(timestamp) AS timestamp, occupancy as "occupancy: _"
+            FROM occupancies
+            GROUP BY location, occupancy
+        "#
     )
     .fetch_all(&db)
-    .await
-    .unwrap()
-        .into_iter()
-        .map(
-            |DbOccupancy {
-                 location,
-                 occupancy,
-                 ..
-             }| LocationOccupancy {
-                name: location,
-                occupancy,
-            },
-        )
-        .collect::<Vec<_>>();
+    .await?
+    .into_iter()
+    .map(
+        |DbOccupancy {
+             location,
+             occupancy,
+             ..
+         }| LocationOccupancy {
+            name: location,
+            occupancy,
+        },
+    )
+    .collect::<Vec<_>>();
 
     let mut headers = HeaderMap::new();
     headers.insert(
@@ -45,5 +48,5 @@ pub async fn fetch(State(db): State<Pool<Postgres>>) -> impl IntoResponse {
         HeaderValue::from_str(&format!("public, max-age={FETCH_MAX_AGE}, immutable")).unwrap(),
     );
 
-    (StatusCode::OK, headers, Json(locations))
+    Ok((StatusCode::OK, headers, Json(locations)))
 }

@@ -8,7 +8,7 @@ processes = []
 
 [env]
   ADDRESS = "0.0.0.0:8080"
-  RUST_LOG = "info"
+  RUST_LOG = "info,sqlx=warn,tower_http::trace::on_request=warn"
 
 [experimental]
   auto_rollback = true

@@ -7,7 +7,7 @@ use {
     color_eyre::eyre::Result,
     serde::{Deserialize, Serialize},
     sqlx::postgres::PgPoolOptions,
-    std::net::SocketAddr,
+    std::{net::SocketAddr, time::Duration},
     tokio::task::JoinHandle,
     tower_http::compression::CompressionLayer,
     tracing::info,
@@ -20,11 +20,11 @@ pub mod routes;
 
 pub use crate::config::Config;
 
-/// Static files cached for 5 minutes
-const STATIC_FILES_MAX_AGE: u64 = 5 * 60;
+/// Static files cached time in seconds
+const STATIC_FILES_MAX_AGE: u64 = 60;
 
-/// Location status cached for 10 seconds
-const FETCH_MAX_AGE: u64 = 10;
+/// Location status cached time in seconds
+const FETCH_MAX_AGE: u64 = 5;
 
 /// Starts a new instance of the contractor returning a handle
 pub async fn start(config: &Config) -> Result<Handle> {
@@ -33,7 +33,10 @@ pub async fn start(config: &Config) -> Result<Handle> {
 
     config::init(config.clone()).await;
 
-    let pool = PgPoolOptions::new().connect(&config.database_url).await?;
+    let pool = PgPoolOptions::new()
+        .acquire_timeout(Duration::from_secs(2))
+        .connect(&config.database_url)
+        .await?;
 
     sqlx::migrate!().run(&pool).await?;
 
