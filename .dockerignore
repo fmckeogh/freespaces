@@ -1,5 +1,6 @@
 # flyctl launch added from .gitignore
 target
+.env
 
 # flyctl launch added from frontend/.gitignore
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
