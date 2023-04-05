@@ -30,3 +30,4 @@ mime_guess = "2.0.4"
 chrono = "0.4.24"
 crc = "3.0.1"
 sqlx = { version = "0.6.3", features = [ "runtime-tokio-rustls", "postgres", "chrono", "offline"] }
+itertools = "0.10.5"

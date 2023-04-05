@@ -1,6 +1,6 @@
 {
   "db": "PostgreSQL",
-  "d9c7a137c6728fbff0c72059245df00031de22563cccd6ca20484f1c722624a0": {
+  "0a2c2d929e969a1332988c5f70fca80b20236dc74ea77ab5fb3aacbdce8c3d97": {
     "describe": {
       "columns": [
         {
@@ -32,14 +32,14 @@
       ],
       "nullable": [
         false,
-        null,
+        false,
         false
       ],
       "parameters": {
         "Left": []
       }
     },
-    "query": "SELECT location, MAX(timestamp) AS timestamp, occupancy as \"occupancy: _\" FROM occupancies GROUP BY location, occupancy"
+    "query": "\n            SELECT location, timestamp, occupancy as \"occupancy: _\"\n            FROM occupancies\n            ORDER BY timestamp DESC\n            LIMIT 10\n        "
   },
   "f19675912159f48e2b383313d194ea152862f183371ecf96424116b66e906235": {
     "describe": {

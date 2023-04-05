@@ -565,6 +565,7 @@ dependencies = [
  "dotenv",
  "futures",
  "include_dir",
+ "itertools",
  "mime_guess",
  "parking_lot 0.12.1",
  "regex",
