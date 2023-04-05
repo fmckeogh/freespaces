@@ -15,8 +15,7 @@ RUN cargo build --tests
 RUN cargo build --release --target x86_64-unknown-linux-musl
 
 # test and build app
-COPY src src
-COPY frontend frontend
+COPY . .
 RUN touch src/main.rs
 RUN cargo test
 RUN cargo build --release --target x86_64-unknown-linux-musl
