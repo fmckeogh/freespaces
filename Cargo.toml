@@ -1,0 +1,33 @@
+[package]
+name = "freespace"
+version = "0.1.0"
+edition = "2021"
+
+[profile.release]
+strip = "symbols"
+lto = "fat"
+codegen-units = 1
+
+[dependencies]
+axum = "0.6.11"
+color-eyre = "0.6.2"
+config = "0.13.3"
+dotenv = "0.15.0"
+serde = { version = "1.0.157", features = ["derive"] }
+tokio = { version = "1.26.0", features = ["full"] }
+tracing = { version = "0.1.37" }
+tracing-subscriber = { version = "0.3.16", features = ["env-filter"] }
+tracing-appender = "0.2.2"
+tower-http = { version = "0.4.0", features = ["trace", "compression-br", "compression-gzip", "compression-deflate"] }
+displaydoc = "0.2.3"
+thiserror = "1.0.40"
+parking_lot = "0.12.1"
+reqwest = { version = "0.11.14", default-features = false, features = ["rustls-tls"] }
+futures = "0.3.27"
+regex = "1.7.1"
+async-once-cell = "0.4.4"
+include_dir = "0.7.3"
+mime_guess = "2.0.4"
+chrono = "0.4.24"
+crc = "3.0.1"
+sqlx = { version = "0.7.0-alpha.2", features = [ "runtime-tokio", "tls-rustls" ] }
