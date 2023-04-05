@@ -24,8 +24,7 @@ pub async fn fetch(State(db): State<Pool<Postgres>>) -> Result<impl IntoResponse
         r#"
             SELECT location, timestamp, occupancy as "occupancy: _"
             FROM occupancies
-            ORDER BY timestamp DESC
-            LIMIT 10
+            ORDER BY location, timestamp DESC
         "#
     )
     .fetch_all(&db)

@@ -1,6 +1,6 @@
 {
   "db": "PostgreSQL",
-  "0a2c2d929e969a1332988c5f70fca80b20236dc74ea77ab5fb3aacbdce8c3d97": {
+  "7ec703fe459a2506cab2b4eab881f9e2cbca64e8e8e0c9c3ab4ae82e074dbfee": {
     "describe": {
       "columns": [
         {
@@ -39,7 +39,7 @@
         "Left": []
       }
     },
-    "query": "\n            SELECT location, timestamp, occupancy as \"occupancy: _\"\n            FROM occupancies\n            ORDER BY timestamp DESC\n            LIMIT 10\n        "
+    "query": "\n            SELECT location, timestamp, occupancy as \"occupancy: _\"\n            FROM occupancies\n            ORDER BY location, timestamp DESC\n        "
   },
   "f19675912159f48e2b383313d194ea152862f183371ecf96424116b66e906235": {
     "describe": {
