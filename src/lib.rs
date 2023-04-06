@@ -1,7 +1,7 @@
 use {
     crate::{
         log::{create_trace_layer, tracing_init},
-        routes::{fetch, health, index, static_files, submit},
+        routes::{fetch, health, images, index, static_files, submit},
     },
     axum::{routing::get, Router},
     color_eyre::eyre::Result,
@@ -44,8 +44,9 @@ pub async fn start(config: &Config) -> Result<Handle> {
 
     // create router with all routes and tracing layer
     let router = Router::new()
-        .route("/locations", get(fetch).post(submit))
         .route("/health", get(health))
+        .route("/locations", get(fetch).post(submit))
+        .route("/images/:name", get(images))
         .route("/", get(index))
         .fallback(static_files)
         .with_state(pool)
