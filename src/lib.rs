@@ -21,10 +21,10 @@ pub mod routes;
 pub use crate::config::Config;
 
 /// Static files cached time in seconds
-const STATIC_FILES_MAX_AGE: u64 = 60;
+const STATIC_FILES_MAX_AGE: u64 = 3600;
 
 /// Location status cached time in seconds
-const FETCH_MAX_AGE: u64 = 5;
+const FETCH_MAX_AGE: u64 = 30;
 
 /// Starts a new instance of the contractor returning a handle
 pub async fn start(config: &Config) -> Result<Handle> {
