@@ -41,6 +41,26 @@
     },
     "query": "\n            SELECT location, timestamp, occupancy as \"occupancy: _\"\n            FROM occupancies\n            ORDER BY location, timestamp DESC\n        "
   },
+  "c0416dafb55b996701d1018feada50a419a4bf25e54c68798224839e7d52cbaf": {
+    "describe": {
+      "columns": [
+        {
+          "name": "contents",
+          "ordinal": 0,
+          "type_info": "Bytea"
+        }
+      ],
+      "nullable": [
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      }
+    },
+    "query": "SELECT contents FROM images WHERE filename = $1"
+  },
   "f19675912159f48e2b383313d194ea152862f183371ecf96424116b66e906235": {
     "describe": {
       "columns": [],

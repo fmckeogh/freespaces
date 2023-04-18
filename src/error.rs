@@ -13,6 +13,8 @@ use {
 pub enum Error {
     /// Unknown location name {0:?}
     UnknownLocationName(String),
+    /// File {0:?} not found
+    FileNotFound(String),
     /// Database error
     DatabaseError(#[from] sqlx::Error),
 }
@@ -23,6 +25,7 @@ impl IntoResponse for Error {
 
         let status_code = match self {
             Error::UnknownLocationName(_) => StatusCode::BAD_REQUEST,
+            Error::FileNotFound(_) => StatusCode::NOT_FOUND,
             Error::DatabaseError(_) => StatusCode::INTERNAL_SERVER_ERROR,
         };
 
