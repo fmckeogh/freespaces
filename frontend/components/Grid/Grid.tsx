@@ -99,27 +99,27 @@ export default function Grid({ setLastUpdated }: IGrid) {
                                         {capacityMap[occupancy]}
                                     </span>
                                 </dd>
-                                <div className='flex flex-row gap-2 mb-2 mt-4 justify-center'>
-                                    <h1 className='text-2xl mt-1'>🪑</h1>
-                                    <div className='flex flex-row justify-center shadow-md rounded-md'>
+                                <div className='flex flex-col gap-2 mb-2 mt-6 justify-center shadow-md rounded-md'>
+                                    <h1 className='text-sm mt-1 font-semibold text-gray-900'>Report Seat Availability</h1>
+                                    <div className='flex flex-row justify-center'>
                                         <button
                                             onClick={() => updateOccupancy(Occupancies.LOW, name)}
                                             type="button"
-                                            className="rounded-l-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+                                            className={`rounded-l-md px-3 py-2 ${lowOccupanyStyling} text-sm font-semibold hover:bg-green-50 focus:z-10`}
                                         >
                                             Many
                                         </button>
                                         <button
                                             onClick={() => updateOccupancy(Occupancies.MEDIUM, name)}
                                             type="button"
-                                            className=" -ml-px inline-flex items-center px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+                                            className={`-ml-px inline-flex items-center px-3 py-2 text-sm ${mediumOccupanyStyling} font-semibold hover:bg-amber-50 focus:z-10`}
                                         >
                                             Some
                                         </button>
                                         <button
                                             onClick={() => updateOccupancy(Occupancies.HIGH, name)}
                                             type="button"
-                                            className=" -ml-px inline-flex items-center rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+                                            className={`-ml-px inline-flex items-center rounded-r-md px-3 py-2 text-sm font-semibold ${highOccupanyStyling} hover:bg-red-50 focus:z-10`}
                                         >
                                             Limited
                                         </button>
