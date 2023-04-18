@@ -89,12 +89,6 @@ impl Handle {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct LocationOccupancy {
-    name: String,
-    occupancy: OccupancyLevel,
-}
-
 #[derive(Debug, Serialize, Deserialize, sqlx::Type)]
 #[serde(rename_all = "lowercase")]
 #[sqlx(type_name = "occupancy_level", rename_all = "lowercase")]

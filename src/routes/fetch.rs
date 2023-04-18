@@ -1,5 +1,5 @@
 use {
-    crate::{error::Error, LocationOccupancy, OccupancyLevel, FETCH_MAX_AGE},
+    crate::{error::Error, OccupancyLevel, FETCH_MAX_AGE},
     axum::{
         extract::State,
         http::{header::CACHE_CONTROL, HeaderMap, HeaderValue, StatusCode},
@@ -8,6 +8,7 @@ use {
     },
     chrono::{DateTime, Utc},
     itertools::{Group, Itertools},
+    serde::Serialize,
     sqlx::{Pool, Postgres},
 };
 
@@ -15,6 +16,14 @@ struct Model {
     location: String,
     timestamp: DateTime<Utc>,
     occupancy: OccupancyLevel,
+    image: Option<String>,
+}
+
+#[derive(Debug, Serialize)]
+pub struct LocationOccupancy {
+    name: String,
+    occupancy: OccupancyLevel,
+    image: Option<String>,
 }
 
 /// Fetch current occupancy status
@@ -22,15 +31,20 @@ pub async fn fetch(State(db): State<Pool<Postgres>>) -> Result<impl IntoResponse
     let groups = sqlx::query_as!(
         Model,
         r#"
-            SELECT location, timestamp, occupancy as "occupancy: _"
+            SELECT location, timestamp, occupancy as "occupancy: _", image
             FROM occupancies
+            JOIN locations ON locations.name = occupancies.location
             ORDER BY location, timestamp DESC
         "#
     )
     .fetch_all(&db)
     .await?
     .into_iter()
-    .group_by(|Model { location, .. }| location.clone());
+    .group_by(
+        |Model {
+             location, image, ..
+         }| (location.clone(), image.clone()),
+    );
 
     let locations = groups
         .into_iter()
@@ -50,7 +64,7 @@ pub async fn fetch(State(db): State<Pool<Postgres>>) -> Result<impl IntoResponse
 ///
 /// Currently submissions are weighted inversely to their age.
 fn process_submissions<F: FnMut(&Model) -> String, I: Iterator<Item = Model>>(
-    (name, group): (String, Group<String, I, F>),
+    ((name, image), group): ((String, Option<String>), Group<String, I, F>),
 ) -> LocationOccupancy {
     const SCALE: f64 = 1.0;
     const TIME: f64 = 3600.0;
@@ -96,5 +110,9 @@ fn process_submissions<F: FnMut(&Model) -> String, I: Iterator<Item = Model>>(
         OccupancyLevel::Low
     };
 
-    LocationOccupancy { name, occupancy }
+    LocationOccupancy {
+        name,
+        occupancy,
+        image,
+    }
 }
