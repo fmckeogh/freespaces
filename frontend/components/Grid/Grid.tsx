@@ -22,13 +22,15 @@ interface ILocation {
     date: string
 }
 
+const capacityMap = {
+    [Occupancies.LOW]: 'Many Seats Available',
+    [Occupancies.MEDIUM]: 'Some Seats Available',
+    [Occupancies.HIGH]: 'Limited Seats Available'
+}
+
 const lowOccupanyStyling = "bg-green-100 text-green-800"
 const mediumOccupanyStyling = "bg-amber-100 text-amber-800"
 const highOccupanyStyling = "bg-red-100 text-red-800"
-
-function capitaliseFirstLetter(word: string) {
-    return word.charAt(0).toUpperCase() + word.substring(1, word.length)
-}
 
 interface IGrid {
     setLastUpdated: Dispatch<SetStateAction<Date | undefined>>
@@ -94,32 +96,36 @@ export default function Grid({ setLastUpdated }: IGrid) {
                                                   ${occupancy === Occupancies.MEDIUM && mediumOccupanyStyling}
                                                   ${occupancy === Occupancies.HIGH && highOccupanyStyling}
                                                   rounded-full px-4 py-2 text-md font-medium`}>
-                                        {capitaliseFirstLetter(occupancy)} Capacity
+                                        {capacityMap[occupancy]}
                                     </span>
                                 </dd>
-                                <div className='flex flex-row mb-2 mt-4 justify-center shadow-md rounded-md'>
-                                    <button
-                                        onClick={() => updateOccupancy(Occupancies.LOW, name)}
-                                        type="button"
-                                        className="rounded-l-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
-                                    >
-                                        Low
-                                    </button>
-                                    <button
-                                        onClick={() => updateOccupancy(Occupancies.MEDIUM, name)}
-                                        type="button"
-                                        className=" -ml-px inline-flex items-center px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
-                                    >
-                                        Medium
-                                    </button>
-                                    <button
-                                        onClick={() => updateOccupancy(Occupancies.HIGH, name)}
-                                        type="button"
-                                        className=" -ml-px inline-flex items-center rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
-                                    >
-                                        High
-                                    </button>
+                                <div className='flex flex-row gap-2 mb-2 mt-4 justify-center'>
+                                    <h1 className='text-2xl mt-1'>🪑</h1>
+                                    <div className='flex flex-row justify-center shadow-md rounded-md'>
+                                        <button
+                                            onClick={() => updateOccupancy(Occupancies.LOW, name)}
+                                            type="button"
+                                            className="rounded-l-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+                                        >
+                                            Many
+                                        </button>
+                                        <button
+                                            onClick={() => updateOccupancy(Occupancies.MEDIUM, name)}
+                                            type="button"
+                                            className=" -ml-px inline-flex items-center px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+                                        >
+                                            Some
+                                        </button>
+                                        <button
+                                            onClick={() => updateOccupancy(Occupancies.HIGH, name)}
+                                            type="button"
+                                            className=" -ml-px inline-flex items-center rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+                                        >
+                                            Limited
+                                        </button>
+                                    </div>
                                 </div>
+
                             </div>
                         </div>
                         <h4 className="mt-2 text-xs font-medium text-gray-600">Last updated: {time}, {date}</h4>
@@ -128,7 +134,7 @@ export default function Grid({ setLastUpdated }: IGrid) {
             </ul>
             {showSuccess &&
                 <div className='z-10 absolute top-[85%] left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
-                    <Alert setShowSuccess={setShowSuccess}/>
+                    <Alert setShowSuccess={setShowSuccess} />
                 </div>
             }
         </div>
