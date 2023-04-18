@@ -17,8 +17,9 @@ export default function Home() {
         <div className='flex flex-col justify-center items-center'>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img className="h-16 w-16" src={"/logo.png"} alt="" />
-          <h1 className='text-amber-500 font-semibold text-2xl mb-6'>Free Space</h1>
-          <h4 className=' text-gray-600 mb-8 max-w-md text-center' >In one of these spaces? Let us know how many seats are available by clicking <span className='text-amber-500'>Many</span>,
+          <h1 className='text-amber-500 font-semibold text-2xl'>Free Space</h1>
+          <h2 className='text-gray-400 font-base text-lg mb-4'>Find free spaces, for free. Forever.</h2>
+          <h4 className=' text-gray-600 mb-6 max-w-md text-center' >In one of these spaces? Let us know how many seats are available by clicking <span className='text-amber-500'>Many</span>,
             <span className='text-amber-500'> Some</span> or <span className='text-amber-500'>Limited</span>!</h4>
           <Grid setLastUpdated={setLastUpdated} />
         </div>
