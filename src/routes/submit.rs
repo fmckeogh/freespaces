@@ -38,7 +38,7 @@ pub async fn submit(
     }
 
     match result {
-        Ok(_) => StatusCode::OK.into_response(),
+        Ok(_) => StatusCode::NO_CONTENT.into_response(),
         Err(e) => Error::DatabaseError(e).into_response(),
     }
 }
