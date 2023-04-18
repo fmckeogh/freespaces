@@ -34,7 +34,7 @@ pub async fn start(config: &Config) -> Result<Handle> {
     config::init(config.clone()).await;
 
     let pool = PgPoolOptions::new()
-        .acquire_timeout(Duration::from_secs(2))
+        .acquire_timeout(Duration::from_secs(5))
         .connect(&config.database_url)
         .await?;
 
@@ -62,7 +62,7 @@ pub async fn start(config: &Config) -> Result<Handle> {
     // spawn server on new tokio task
     let handle = tokio::spawn(async { server.await.map_err(Into::into) });
 
-    info!("contractor started on http://{}", address);
+    info!("started on http://{}", address);
 
     // return handles
     Ok(Handle { address, handle })
