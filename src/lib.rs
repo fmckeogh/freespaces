@@ -21,7 +21,7 @@ pub mod routes;
 pub use crate::config::Config;
 
 /// Static files cached time in seconds
-const STATIC_FILES_MAX_AGE: u64 = 3600;
+const STATIC_FILES_MAX_AGE: u64 = 300;
 
 /// Location status cached time in seconds
 const FETCH_MAX_AGE: u64 = 30;
