@@ -133,7 +133,7 @@ export default function Grid({ setLastUpdated }: IGrid) {
                 ))}
             </ul>
             {showSuccess &&
-                <div className='z-10 absolute top-[85%] left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
+                <div className='z-10 fixed h-full top-[85%] left-1/2 transform -translate-x-1/2'>
                     <Alert setShowSuccess={setShowSuccess} />
                 </div>
             }

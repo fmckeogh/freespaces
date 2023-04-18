@@ -15,7 +15,7 @@ export default function Alert({setShowSuccess}: IAlert) {
                 <div className="ml-3">
                     <h3 className="text-sm font-medium text-green-800">Report Submitted</h3>
                     <div className="mt-2 text-sm text-green-700">
-                        <p>Thank you for contributing to FreeSpaces!</p>
+                        <p className='whitespace-nowrap'>Thank you for contributing to FreeSpaces!</p>
                     </div>
                 </div>
                 <div className="ml-auto pl-3">
