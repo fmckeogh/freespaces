@@ -24,7 +24,7 @@ pub use crate::config::Config;
 const STATIC_FILES_MAX_AGE: u64 = 300;
 
 /// Location status cached time in seconds
-const FETCH_MAX_AGE: u64 = 30;
+const FETCH_MAX_AGE: u64 = 10;
 
 /// Starts a new instance of the contractor returning a handle
 pub async fn start(config: &Config) -> Result<Handle> {
