@@ -1,15 +1,22 @@
 use {
-    crate::{error::Error, LocationOccupancy, OccupancyLevel},
+    crate::{error::Error, OccupancyLevel},
     axum::{
         extract::State,
         http::StatusCode,
         response::{IntoResponse, Response},
         Json,
     },
+    serde::{Deserialize, Serialize},
     sqlx::{Pool, Postgres},
 };
 
 const LOCATION_NOT_EXIST_ERROR_CODE: &str = "23503";
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct LocationOccupancy {
+    name: String,
+    occupancy: OccupancyLevel,
+}
 
 /// Submit new occupancy
 pub async fn submit(

@@ -92,6 +92,7 @@ impl Handle {
 pub struct LocationOccupancy {
     name: String,
     occupancy: OccupancyLevel,
+    timestamp: i64,
 }
 
 #[derive(Debug, Serialize, Deserialize, sqlx::Type)]

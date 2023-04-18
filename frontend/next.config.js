@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-  output: "export",
-};
 
-module.exports = nextConfig;
+module.exports = {
+  async rewrites() {
+    return [
+      {
+        source: '/locations',
+        destination: 'http://127.0.0.1:8080/locations'
+      }
+    ]
+  }
+}

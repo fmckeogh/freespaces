@@ -1,5 +1,5 @@
 use {
-    crate::{error::Error, LocationOccupancy, OccupancyLevel, FETCH_MAX_AGE},
+    crate::{error::Error, OccupancyLevel, FETCH_MAX_AGE},
     axum::{
         extract::State,
         http::{header::CACHE_CONTROL, HeaderMap, HeaderValue, StatusCode},
@@ -8,6 +8,7 @@ use {
     },
     chrono::{DateTime, Utc},
     itertools::{Group, Itertools},
+    serde::{Deserialize, Serialize},
     sqlx::{Pool, Postgres},
 };
 
@@ -15,6 +16,13 @@ struct Model {
     location: String,
     timestamp: DateTime<Utc>,
     occupancy: OccupancyLevel,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct LocationOccupancy {
+    name: String,
+    occupancy: OccupancyLevel,
+    timestamp: i64,
 }
 
 /// Fetch current occupancy status
@@ -96,5 +104,9 @@ fn process_submissions<F: FnMut(&Model) -> String, I: Iterator<Item = Model>>(
         OccupancyLevel::Low
     };
 
-    LocationOccupancy { name, occupancy }
+    LocationOccupancy {
+        name,
+        occupancy,
+        timestamp: most_recent,
+    }
 }
