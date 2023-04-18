@@ -10,22 +10,26 @@ Response:
 
 ```json
 [
-    {
-        "name": "Taste",
-        "occupancy": "low"
-    },
-    {
-        "name": "Costa",
-        "occupancy": "medium"
-    },
-    {
-        "name": "Rector's Cafe",
-        "occupancy": "low"
-    },
-    {
-        "name": "Main Library",
-        "occupancy": "high"
-    }
+	{
+		"name": "Costa",
+		"occupancy": "high",
+		"timestamp": 1681750300
+	},
+	{
+		"name": "Main Library",
+		"occupancy": "medium",
+		"timestamp": 1681750261
+	},
+	{
+		"name": "Rector's Cafe",
+		"occupancy": "low",
+		"timestamp": 1681750220
+	},
+	{
+		"name": "Taste",
+		"occupancy": "medium",
+		"timestamp": 1681750300
+	}
 ]
 ```
 
