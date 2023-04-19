@@ -65,6 +65,8 @@ fn process_submissions<F: FnMut(&Model) -> String, I: Iterator<Item = Model>>(
 
     let values = group
         .into_iter()
+        // take only the 10 most recent values
+        .take(10)
         .map(
             |Model {
                  timestamp,
