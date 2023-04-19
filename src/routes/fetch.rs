@@ -61,7 +61,7 @@ fn process_submissions<F: FnMut(&Model) -> String, I: Iterator<Item = Model>>(
     (name, group): (String, Group<String, I, F>),
 ) -> LocationOccupancy {
     const SCALE: f64 = 1.0;
-    const TIME: f64 = 3600.0;
+    const TIME: f64 = 1000.0;
 
     let values = group
         .into_iter()
@@ -96,9 +96,9 @@ fn process_submissions<F: FnMut(&Model) -> String, I: Iterator<Item = Model>>(
         .sum::<f64>()
         / values.len() as f64;
 
-    let occupancy = if weighted_mean > 0.5 {
+    let occupancy = if weighted_mean > 0.33 {
         OccupancyLevel::High
-    } else if weighted_mean > -0.5 {
+    } else if weighted_mean > -0.33 {
         OccupancyLevel::Medium
     } else {
         OccupancyLevel::Low
